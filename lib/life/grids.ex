@@ -19,4 +19,18 @@ defmodule Life.Grids do
     ]
     )
   end
+
+  def gun do
+   gosper_glider()
+    |>transpose({0,90})
+    |>mirror()
+  end
+
+  def transpose(grid, {x_offset, y_offset}) do
+    Enum.into(grid, MapSet.new, fn {x, y} -> {x + x_offset, y + y_offset}  end)
+  end
+
+  def mirror(grid) do
+    Enum.into(grid, MapSet.new, fn {x, y} -> {y, x}  end)
+  end
 end

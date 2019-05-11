@@ -4,15 +4,15 @@ defmodule LifeWeb.GridView do
   alias Life.Grid
   def render(assigns) do
     ~L"""
-    <div class="container">
-      <%= for y <- -100..100 do %>
-        <div class="row">
-          <%= for x <- -100..100 do %>
-          <div class="column"><%= if MapSet.member?(@grid, {x,y}), do: "X", else: " " %> </div>
+    <table>
+      <%= for y <- 100..1 do %>
+        <tr>
+          <%= for x <- 1..100 do %>
+            <td class="<%= if MapSet.member?(@grid, {x,y}), do: "grid-cell-alive", else: "grid-cell-dead" %>"></td>
           <% end %>
-        </div>
-        <% end %>
-    </div>
+        </tr>
+      <% end %>
+    </table>
     <div class="">
       <div>
         <div>
@@ -27,7 +27,7 @@ defmodule LifeWeb.GridView do
 
   def mount(_session, socket) do
     Logger.debug "Mounting!"
-    {:ok, assign(socket, generation: 0, grid: Life.Grids.gosper_glider())}
+    {:ok, assign(socket, generation: 0, grid: Life.Grids.gun())}
   end
 
   def handle_event("next_gen", _value, socket) do
@@ -35,7 +35,7 @@ defmodule LifeWeb.GridView do
   end
 
   def handle_event("auto", _value,  socket) do
-    :timer.send_interval(200, self(), :next_gen)
+    :timer.send_interval(400, self(), :next_gen)
     {:noreply, socket}
   end
 
