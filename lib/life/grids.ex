@@ -37,4 +37,15 @@ defmodule Life.Grids do
   def add_cells(grid, cells), do: MapSet.union(grid, cells)
   def add_cell(grid, {_x, _y} = cell ), do: MapSet.put(grid, cell)
 
+  def interesting_starter do
+    blinker_left = transpose(blinker, {10, 90})
+    blinker_right = transpose(blinker, {90, 90})
+
+    gosper_glider()
+    |>transpose({0,90})
+    |>mirror()
+    |>add_cells(blinker_left)
+    |>add_cells(blinker_right)
+
+  end
 end
