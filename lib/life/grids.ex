@@ -61,8 +61,10 @@ defmodule Life.Grids do
     Enum.into(grid, MapSet.new, fn {x, y} -> {y, x}  end)
   end
 
-  def add_cells(grid, cells), do: MapSet.union(grid, cells)
   def add_cell(grid, {_x, _y} = cell), do: MapSet.put(grid, cell)
+  def add_cells(grid, cells, at \\ {0, 0}) do
+    MapSet.union(grid, transpose(cells, at))
+  end
 
   def remove_cells(grid, cells), do: MapSet.difference(grid, cells)
   def remove_cell(grid, {_x, _y} = cell), do: MapSet.delete(grid, cell)
@@ -76,19 +78,21 @@ defmodule Life.Grids do
   end
 
   def interesting_starter do
-    blinker_left = transpose(blinker(), {10, 90})
-    blinker_right = transpose(blinker(), {90, 90})
-    blinker_center = transpose(blinker(), {50, 50})
-    penta = transpose(Life.Patterns.Oscillators.pentadecathlon(), {40, 80})
-    bees = transpose(Life.Patterns.StillLife.beehive(), {70, 10})
     gosper_glider()
-    |> transpose({10, 80})
+    |> transpose({10, 130})
     |> mirror()
-    |> add_cells(blinker_left)
-    |> add_cells(blinker_right)
-    |> add_cells(blinker_center)
-    |> add_cells(penta)
-    |> add_cells(bees)
+    |> add_cells(blinker(), {10, 120})
+    |> add_cells(blinker(), {90, 90})
+    |> add_cells(blinker(), {50, 50})
+    |> add_cells(blinker(), {50, 60})
+    |> add_cells(blinker(), {50, 70})
+    |> add_cells(blinker(), {50, 80})
+    |> add_cells(Life.Patterns.Oscillators.pentadecathlon(), {40, 100})
+    |> add_cells(Life.Patterns.Oscillators.toad(), {10, 10})
+    |> add_cells(Life.Patterns.Oscillators.pulsar(), {25, 0})
+    |> add_cells(Life.Patterns.Oscillators.pulsar(), {123, 135})
+    |> add_cells(Life.Patterns.Spaceships.lightweight_spaceship(), {-10, 85})
+    |> add_cells(Life.Patterns.StillLife.beehive(), {70, 10})
 
   end
 end

@@ -3,7 +3,7 @@ defmodule LifeWeb.GridView do
   require Logger
   alias Life.Grid
 
-  @board_size 100
+  @board_size 144
   def render(assigns) do
     board_size = @board_size
     ~L"""
