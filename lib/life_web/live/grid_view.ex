@@ -20,7 +20,8 @@ defmodule LifeWeb.GridView do
       <div>
         <div>
           <button phx-click="next_gen">Next Generation</button>
-          <button phx-click="auto">Start auto</button>
+          <button phx-click="start_auto">Start auto</button>
+          <button phx-click="stop_auto">Stop auto</button>
         </div>
         Status: <%= @generation %>
       </div>
@@ -44,8 +45,39 @@ defmodule LifeWeb.GridView do
     handle_info(:next_gen, socket)
   end
 
-  def handle_event("auto", _value,  socket) do
-    :timer.send_interval(500, self(), :next_gen)
+  def handle_event("start_auto", _value,  %{assigns: %{ tref: tref}} = socket) when is_nil(tref) do
+    start_auto(socket)
+  end
+
+  def handle_event("start_auto", _value,  %{assigns: %{ tref: _tref,}} = socket) do
+    Logger.debug "Start_auto with tref"
+    {:noreply, socket}
+  end
+
+  def handle_event("start_auto", _value,  socket) do
+    start_auto(socket)
+  end
+
+  def start_auto(socket) do
+    {:ok, tref} = :timer.send_interval(500, self(), :next_gen)
+    {:noreply, assign(socket, tref: tref)}
+  end
+
+
+
+  def handle_event("stop_auto", _value,  %{assigns: %{ tref: tref}} = socket) do
+    :timer.cancel(tref)
+#    socket = update_in(socket.assigns, &Map.drop(&1, [:tref]))
+    {:noreply, update(socket, :tref, fn _ -> nil end)}
+  end
+
+  def handle_event("stop_auto", _value,  %{assigns: %{ tref: tref}} = socket) when is_nil(tref) do
+    Logger.debug "Stop_auto without tref and nil"
+    {:noreply, socket}
+  end
+
+  def handle_event("stop_auto", _value,  socket) do
+    Logger.debug "Stop_auto without tref"
     {:noreply, socket}
   end
 
