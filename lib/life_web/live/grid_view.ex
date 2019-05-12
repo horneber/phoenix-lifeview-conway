@@ -49,7 +49,7 @@ defmodule LifeWeb.GridView do
   end
 
   def handle_event("auto", _value,  socket) do
-    :timer.send_interval(250, self(), :next_gen)
+    :timer.send_interval(500, self(), :next_gen)
     {:noreply, socket}
   end
 
