@@ -2,7 +2,7 @@ defmodule Life.Grids do
 
   def empty_grid, do: MapSet.new
 
-  def blinker, do: MapSet.new([{2,2}, {2,3}, {2,4}])
+  def blinker, do: MapSet.new([{-1, 0}, {0, 0}, {1, 0}])
 
   def gosper_glider do
     MapSet.new(
@@ -33,4 +33,8 @@ defmodule Life.Grids do
   def mirror(grid) do
     Enum.into(grid, MapSet.new, fn {x, y} -> {y, x}  end)
   end
+
+  def add_cells(grid, cells), do: MapSet.union(grid, cells)
+  def add_cell(grid, {_x, _y} = cell ), do: MapSet.put(grid, cell)
+
 end

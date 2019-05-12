@@ -8,7 +8,7 @@ defmodule Life.GridTest do
   end
 
   test "blinker one generation" do
-    assert Grid.calc_next_grid(Grids.blinker()) == MapSet.new([{1, 3}, {2, 3}, {3, 3}])
+    assert Grid.calc_next_grid(Grids.blinker()) == MapSet.new([{0, -1}, {0, 0}, {0, 1}])
   end
 
   test "blinker two generation loop" do
@@ -21,7 +21,26 @@ defmodule Life.GridTest do
   end
 
   test "transpose" do
-    assert Grids.transpose(Grids.blinker(), {1,2}) == MapSet.new([{3, 4}, {3, 5}, {3, 6}])
+    assert Grids.transpose(Grids.blinker(), {3, 4}) == MapSet.new([{2, 4}, {3, 4}, {4, 4}])
+  end
+
+  test "add cell" do
+    grid =
+      Grids.empty_grid()
+      |> Grids.add_cell({1, 0})
+      |> Grids.add_cell({1, 0})
+      |> Grids.add_cell({0, 0})
+
+    assert grid == MapSet.new([{0, 0}, {1, 0}])
+  end
+
+  test "add cells" do
+    grid =
+      Grids.empty_grid()
+      |> Grids.add_cells(Grids.blinker())
+
+    assert grid == MapSet.new([{-1, 0}, {0, 0}, {1, 0}])
+
   end
 
 end
