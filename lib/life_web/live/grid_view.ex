@@ -8,7 +8,7 @@ defmodule LifeWeb.GridView do
       <%= for y <- 100..1 do %>
         <tr>
           <%= for x <- 1..100 do %>
-            <td class="<%= if MapSet.member?(@grid, {x,y}), do: "grid-cell-alive", else: "grid-cell-dead" %>"></td>
+            <td class="<%= if MapSet.member?(@grid, {x,y}), do: "alive", else: "dead" %>"></td>
           <% end %>
         </tr>
       <% end %>
@@ -27,7 +27,7 @@ defmodule LifeWeb.GridView do
 
   def mount(_session, socket) do
     Logger.debug "Mounting!"
-    {:ok, assign(socket, generation: 0, grid: Life.Grids.gun())}
+    {:ok, assign(socket, generation: 0, grid: Life.Grids.interesting_starter())}
   end
 
   def handle_event("next_gen", _value, socket) do

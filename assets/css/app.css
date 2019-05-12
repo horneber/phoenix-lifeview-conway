@@ -1,3 +1,13 @@
 /* This file is for your main application css. */
 
 @import "./phoenix.css";
+
+body {
+    background-color: #F8FAFC;
+}
+.alive {
+    background: #22292F;
+}
+.dead {
+    background: #F1F5F8;
+}
