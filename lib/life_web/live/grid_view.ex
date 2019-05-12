@@ -108,7 +108,7 @@ defmodule LifeWeb.GridView do
     {:noreply, assign(socket, :grid, Life.Grids.transpose(grid, {4, 0}))}
   end
 
-  def handle_event("window_key_event", any_other_key, %{assigns: %{ grid: grid }} = socket) do
+  def handle_event("window_key_event", any_other_key, socket) do
     Logger.debug "unhandled key: #{inspect(any_other_key)}"
     {:noreply, socket}
   end
