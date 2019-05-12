@@ -33,13 +33,9 @@ defmodule LifeWeb.GridView do
     {:ok, assign(socket, generation: 0, grid: Life.Grids.interesting_starter())}
   end
 
-  def handle_event("toggle", value,  %{assigns: %{ grid: grid, generation: _generation }} = socket) do
-    Logger.debug "Toggle #{inspect(value)}}"
+  def handle_event("toggle", value,  %{assigns: %{ grid: grid}} = socket) do
     {x, "," <> rest} = Integer.parse(value)
-    Logger.debug "X #{inspect(x)}"
-    Logger.debug "rest #{inspect(rest)}"
     {y, _} = Integer.parse(rest)
-    Logger.debug "Y #{inspect(y)}"
     grid = Life.Grids.toggle_cell(grid, {x, y})
     {:noreply, assign(socket, grid: grid)}
   end
@@ -54,7 +50,6 @@ defmodule LifeWeb.GridView do
   end
 
   def handle_info(:next_gen, %{assigns: %{ grid: grid, generation: generation }} = socket) do
-    # do the deploy process
     # Logger.debug "next_gen for #{inspect(grid)}}"
     next_grid = Grid.calc_next_grid(grid)
     # Logger.debug "next_gen is #{inspect(next_grid)}}"

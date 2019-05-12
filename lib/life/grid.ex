@@ -19,8 +19,8 @@ defmodule Life.Grid do
     end)
   end
 
-  defp should_live?(is_alive, num_neighbors) do
-    (num_neighbors == 2 && is_alive) || (num_neighbors == 3)
+  defp should_live?(alive?, num_neighbors) do
+    (num_neighbors == 2 && alive?) || (num_neighbors == 3)
   end
 
   defp count_neighbors(grid, {x, y}) do
