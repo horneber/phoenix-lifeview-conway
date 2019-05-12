@@ -29,7 +29,8 @@ defmodule LifeWeb.GridView do
     </div>
     <div>
         Arrow keys move the grid around. Keys <code>w s a d</code> scroll a little faster. <br>
-        Cells are click-able. <code>Space</code> starts and stops the automaton.
+        Cells are click-able. <code>Space</code> starts and stops the automaton. <br>
+        Key events seem to get dropped or delayed from time to time.
     </div>
     """
   end
