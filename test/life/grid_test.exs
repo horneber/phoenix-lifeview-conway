@@ -43,4 +43,32 @@ defmodule Life.GridTest do
 
   end
 
+
+  test "remove cells" do
+    grid =
+      Grids.blinker()
+      |> Grids.remove_cells(Grids.blinker())
+
+    assert grid == Grids.empty_grid()
+  end
+
+  test "remove cell" do
+    grid =
+      Grids.blinker()
+      |> Grids.remove_cell({-1, 0})
+
+    assert grid == MapSet.new([{0, 0}, {1, 0}])
+  end
+
+  test "toggle cell" do
+    grid =
+      Grids.blinker()
+      |> Grids.toggle_cell({-1, 0})
+
+    assert grid == MapSet.new([{0, 0}, {1, 0}])
+
+    grid = Grids.toggle_cell(grid,{-1, 0} )
+    assert grid == Grids.blinker()
+  end
+
 end

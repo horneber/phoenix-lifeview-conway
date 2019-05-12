@@ -64,6 +64,17 @@ defmodule Life.Grids do
   def add_cells(grid, cells), do: MapSet.union(grid, cells)
   def add_cell(grid, {_x, _y} = cell), do: MapSet.put(grid, cell)
 
+  def remove_cells(grid, cells), do: MapSet.difference(grid, cells)
+  def remove_cell(grid, {_x, _y} = cell), do: MapSet.delete(grid, cell)
+
+  def toggle_cell(grid, {_x, _y} = cell) do
+    if MapSet.member?(grid, cell) do
+      remove_cell(grid, cell)
+    else
+      add_cell(grid, cell)
+    end
+  end
+
   def interesting_starter do
     blinker_left = transpose(blinker(), {10, 90})
     blinker_right = transpose(blinker(), {90, 90})
@@ -71,7 +82,7 @@ defmodule Life.Grids do
     penta = transpose(Life.Patterns.Oscillators.pentadecathlon(), {40, 80})
     bees = transpose(Life.Patterns.StillLife.beehive(), {70, 10})
     gosper_glider()
-    |> transpose({0, 90})
+    |> transpose({10, 80})
     |> mirror()
     |> add_cells(blinker_left)
     |> add_cells(blinker_right)
