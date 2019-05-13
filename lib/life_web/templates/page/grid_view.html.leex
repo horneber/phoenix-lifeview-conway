@@ -27,23 +27,26 @@
      </div>
     </div>
     <div class="row">
+       <nav>
+                  <%= if @tref  do %>
+                     <button phx-click="stop_auto">Stop auto</button>
+                   <% else %>
+                     <button phx-click="next_gen">Next Generation</button>
+                     <button phx-click="start_auto">Start auto</button>
+                   <% end %>
+       </nav>
+    </div>
+     <div class="row">
         <div>
           Generation: <%= @generation %>
         </div>
+    </div>
+    <div class="row">
         <div>
             Arrow keys move the grid around. Keys <code>w s a d</code> scroll a little faster. <br>
             Cells are click-able. <code>Space</code> starts and stops the automaton. <br>
             Key events seem to get dropped or delayed from time to time.
         </div>
-
-        <nav>
-              <%= if @tref  do %>
-                 <button phx-click="stop_auto">Stop auto</button>
-               <% else %>
-                 <button phx-click="next_gen">Next Generation</button>
-                 <button phx-click="start_auto">Start auto</button>
-               <% end %>
-        </nav>
     </div>
 </div>
 
