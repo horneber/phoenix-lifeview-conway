@@ -8,8 +8,8 @@ defmodule LifeWeb.GridView do
     LifeWeb.PageView.render("grid_view.html", assigns)
   end
 
-  @default_timer_interval 500
-  @default_grid_size floor(:math.sqrt(10_000))
+  @default_timer_interval 300
+  @default_grid_size 50
   def mount(_session, socket) do
     Logger.debug "Mounting!"
     if connected?(socket), do: Logger.debug "Connected."
