@@ -1,10 +1,6 @@
 defmodule LifeWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :life
 
-  socket "/socket", LifeWeb.UserSocket,
-    websocket: true,
-    longpoll: false
-
   socket "/l", Phoenix.LiveView.Socket
 
   # Serve at "/" the static files from "priv/static" directory.

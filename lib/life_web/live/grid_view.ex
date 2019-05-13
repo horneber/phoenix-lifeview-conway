@@ -8,8 +8,8 @@ defmodule LifeWeb.GridView do
     LifeWeb.PageView.render("grid_view.html", assigns)
   end
 
-  @default_timer_interval 300
-  @default_grid_size 50
+  @default_timer_interval 333
+  @default_grid_size 60
   def mount(_session, socket) do
     Logger.debug "Mounting!"
     if connected?(socket), do: Logger.debug "Connected."
@@ -121,7 +121,6 @@ defmodule LifeWeb.GridView do
     {:noreply, assign(socket, generation: generation + 1, grid: next_grid)}
   end
 
-  @default_timer_interval 500
   def start_auto(socket) do
     %{assigns: %{timer_interval: timer_interval}} = socket
     {:ok, tref} = :timer.send_interval(timer_interval,  self(), :next_gen)
