@@ -91,6 +91,7 @@ defmodule Life.Grids do
     |> add_cells(Life.Patterns.Oscillators.toad(), {10, 10})
     |> add_cells(Life.Patterns.Oscillators.pulsar(), {25, 0})
     |> add_cells(Life.Patterns.Oscillators.pulsar(), {123, 135})
+    |> add_cells(Life.Patterns.Spaceships.lightweight_spaceship(), {-40, 85})
     |> add_cells(Life.Patterns.Spaceships.lightweight_spaceship(), {-10, 85})
     |> add_cells(Life.Patterns.StillLife.beehive(), {70, 10})
 

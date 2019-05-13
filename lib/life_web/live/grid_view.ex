@@ -5,12 +5,20 @@ defmodule LifeWeb.GridView do
 
 
   def render(assigns) do
-    LifeWeb.PageView.render("index.html", assigns)
+    LifeWeb.PageView.render("grid_view.html", assigns)
   end
 
+  @default_timer_interval 500
+  @default_grid_size floor(:math.sqrt(10_000))
   def mount(_session, socket) do
     Logger.debug "Mounting!"
-    {:ok, assign(socket, generation: 0, grid: Life.Grids.interesting_starter(), tref: nil)}
+    if connected?(socket), do: Logger.debug "Connected."
+    {:ok, assign(socket,
+      generation: 0,
+      grid: Life.Grids.interesting_starter(),
+      tref: nil,
+      grid_size: @default_grid_size,
+      timer_interval: @default_timer_interval)}
   end
 
   def handle_event("toggle", value,  %{assigns: %{ grid: grid}} = socket) do
@@ -39,6 +47,26 @@ defmodule LifeWeb.GridView do
 
   def handle_event("next_gen", _value, socket) do
     handle_info(:next_gen, socket)
+  end
+
+  def handle_event("log", %{"controls" => controls}, socket) do
+    Logger.debug inspect(controls)
+    {:noreply, socket}
+  end
+
+  def handle_event("save", %{"controls" => controls}, socket) do
+    Logger.debug "save #{inspect(controls)}"
+    %{"grid_size" => grid_size } = controls
+    %{"timer_interval" => timer_interval } = controls
+    grid_size = case Integer.parse(grid_size) do
+      {grid_size, _} -> grid_size
+      :error -> @default_grid_size
+    end
+    timer_interval = case Integer.parse(timer_interval) do
+      {timer_interval, _} -> timer_interval
+      :error -> @default_timer_interval
+    end
+    {:noreply, assign(socket, timer_interval: timer_interval, grid_size: grid_size)}
   end
 
   def handle_event("window_key_event", " ", %{assigns: %{ tref: nil }} = socket) do
@@ -93,8 +121,10 @@ defmodule LifeWeb.GridView do
     {:noreply, assign(socket, generation: generation + 1, grid: next_grid)}
   end
 
+  @default_timer_interval 500
   def start_auto(socket) do
-    {:ok, tref} = :timer.send_interval(500, self(), :next_gen)
+    %{assigns: %{timer_interval: timer_interval}} = socket
+    {:ok, tref} = :timer.send_interval(timer_interval,  self(), :next_gen)
     {:noreply, assign(socket, tref: tref)}
   end
 
