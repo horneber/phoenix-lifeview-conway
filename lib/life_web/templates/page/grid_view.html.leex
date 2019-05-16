@@ -1,47 +1,38 @@
- <div class="container">
+ <div class="container mx-auto">
+   <div class="flex flex-col">
+     <table  phx-keyup="window_key_event" phx-target="window" class="mx-auto">
+      <%= for y <- @grid_size..1 do %>
+        <tr>
+          <%= for x <- 1..@grid_size do %>
+            <td class="<%= if MapSet.member?(@grid, {x,y}), do: "alive", else: "dead" %>" phx-click="toggle" phx-value="<%= x %>,<%= y %>"></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+    <div id="controls">
+         <%= form_tag("#", phx_change: :save)%>
 
-   <div class="row">
-     <div class="column">
+             <%= label :controls, :grid_size %>
+             <%= number_input :controls, :grid_size, value: @grid_size, phx_change: :log %>
 
-         <table  phx-keyup="window_key_event" phx-target="window">
-              <%= for y <- @grid_size..1 do %>
-                <tr>
-                  <%= for x <- 1..@grid_size do %>
-                    <td class="<%= if MapSet.member?(@grid, {x,y}), do: "alive", else: "dead" %>" phx-click="toggle" phx-value="<%= x %>,<%= y %>"></td>
-                  <% end %>
-                </tr>
-              <% end %>
-            </table>
+             <%= label :controls, :timer_interval %>
+             <%= number_input :controls, :timer_interval, value: @timer_interval, phx_change: :log %>
+         </form>
      </div>
-     <div class="column">
-        <div id="controls">
-             <%= form_tag("#", phx_change: :save)%>
-
-                 <%= label :controls, :grid_size %>
-                 <%= number_input :controls, :grid_size, value: @grid_size, phx_change: :log %>
-
-                 <%= label :controls, :timer_interval %>
-                 <%= number_input :controls, :timer_interval, value: @timer_interval, phx_change: :log %>
-             </form>
-         </div>
-     </div>
-    </div>
-    <div class="row">
-       <nav>
+    <div class="flex">
+       <nav class="flex flex-col p-2">
                   <%= if @tref  do %>
-                     <button phx-click="stop_auto">Stop auto</button>
+                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" phx-click="stop_auto">Stop auto</button>
                    <% else %>
-                     <button phx-click="next_gen">Next Generation</button>
-                     <button phx-click="start_auto">Start auto</button>
+                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" phx-click="next_gen">Next Generation</button>
+                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" phx-click="start_auto">Start auto</button>
                    <% end %>
        </nav>
     </div>
-     <div class="row">
-        <div>
+     <div class="flex flex-row">
           Generation: <%= @generation %>
-        </div>
     </div>
-    <div class="row">
+    <div class="flex flex-row">
         <div>
             Arrow keys move the grid around. Keys <code>w s a d</code> scroll a little faster. <br>
             Cells are click-able. <code>Space</code> starts and stops the automaton. <br>
@@ -49,4 +40,3 @@
         </div>
     </div>
 </div>
-
