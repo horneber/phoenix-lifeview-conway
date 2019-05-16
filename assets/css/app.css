@@ -1,13 +1,51 @@
 /* This file is for your main application css. */
-
 @import "./phoenix.css";
 
 body {
     background-color: #F8FAFC;
 }
+
 .alive {
     background: #22292F;
 }
+
 .dead {
     background: #F1F5F8;
+}
+
+footer {
+    text-align: center;
+    font-size: 0.6rem;
+    bottom: 0;
+    width: 90%;
+}
+
+footer img {
+    width: 9px;
+    height: 10px;
+}
+
+div#edit_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 99%;
+    height: 99%;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5); /*dim the background*/
+}
+
+.stats {
+    border: 0.1rem solid #d1d1d1;
+    border-radius: .4rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-sizing: inherit;
+    margin-bottom: 4rem;
+    margin-top: 2rem;
+    padding: .6rem 1.0rem;
+    width: 100%
+}
+
+.number_value {
+    font-family: monospace;
 }

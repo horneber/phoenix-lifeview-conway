@@ -1,27 +1,36 @@
- <div class="container">
+ <div class="container" phx-keyup="window_key_event" phx-target="window">
 
    <div class="row">
      <div class="column">
-
-         <table  phx-keyup="window_key_event" phx-target="window">
-              <%= for y <- @grid_size..1 do %>
-                <tr>
-                  <%= for x <- 1..@grid_size do %>
-                    <td class="<%= if MapSet.member?(@grid, {x,y}), do: "alive", else: "dead" %>" phx-click="toggle" phx-value="<%= x %>,<%= y %>"></td>
-                  <% end %>
-                </tr>
-              <% end %>
-            </table>
+        <svg viewbox="0 0 <%=@grid_size %> <%=@grid_size %>">
+            <rect width="<%=@grid_size %>" height="<%=@grid_size %>" fill="#F1F5F8"/>
+            <%= for x <- 1..@grid_size, y <- 1..@grid_size do %>
+              <%= if MapSet.member?(@grid, {x,y}) do  %>
+                <rect width="0.9" height="0.9" x="<%= x %>" y="<%= y %>" phx-click="toggle" phx-value="<%= x %>,<%= y %>" />
+             <% end %>
+            <% end %>
+        </svg>
      </div>
      <div class="column">
-        <div id="controls">
+         <div class="stats">
+             <div>
+                Generation: <span class="number_value"><%= @generation %></span>
+             </div>
+             <div>
+               Alive Cells: <span class="number_value"><%= MapSet.size(@grid) %></span>
+             </div>
+             <div>
+               Largest Population Seen: <span class="number_value"><%= @largest_population_ever %></span>
+             </div>
+         </div>
+        <div class="stats" id="controls">
              <%= form_tag("#", phx_change: :save)%>
 
                  <%= label :controls, :grid_size %>
                  <%= number_input :controls, :grid_size, value: @grid_size, phx_change: :log %>
 
                  <%= label :controls, :timer_interval %>
-                 <%= number_input :controls, :timer_interval, value: @timer_interval, phx_change: :log %>
+                 <%= number_input :controls, :timer_interval, value: @timer_interval, min: 100, phx_change: :log %>
              </form>
          </div>
      </div>
@@ -29,24 +38,38 @@
     <div class="row">
        <nav>
                   <%= if @tref  do %>
-                     <button phx-click="stop_auto">Stop auto</button>
+                     <button phx-click="stop_auto">Stop</button>
                    <% else %>
+                     <button phx-click="start_auto">Start</button>
                      <button phx-click="next_gen">Next Generation</button>
-                     <button phx-click="start_auto">Start auto</button>
+                     <button phx-click="start_editing">Edit</button>
                    <% end %>
        </nav>
     </div>
-     <div class="row">
-        <div>
-          Generation: <%= @generation %>
-        </div>
-    </div>
+
     <div class="row">
         <div>
             Arrow keys move the grid around. Keys <code>w s a d</code> scroll a little faster. <br>
-            Cells are click-able. <code>Space</code> starts and stops the automaton. <br>
+            <code>Space</code> starts and stops the automaton. <br>
             Key events seem to get dropped or delayed from time to time.
         </div>
     </div>
+
 </div>
+<%= if @edit?  do %>
+    <div id="edit_overlay" >
+        <div class="container">
+            <table >
+              <%= for y <- 1..@grid_size do %>
+                <tr>
+                  <%= for x <- 1..@grid_size do %>
+                    <td class="<%= if MapSet.member?(@grid, {x,y}), do: "alive", else: "dead" %>" phx-click="toggle" phx-value="<%= x %>,<%= y %>"></td>
+                  <% end %>
+                </tr>
+              <% end %>
+            </table>
+            <button phx-click="stop_editing">Close</button>
+        </div>
+    </div>
+<% end %>
 
