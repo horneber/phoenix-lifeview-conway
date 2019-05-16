@@ -4,14 +4,20 @@
 
 @tailwind components;
 
-@tailwind utilities;
-
 body {
     background-color: #F8FAFC;
 }
+
+
+
 .alive {
     background: #22292F;
 }
 .dead {
     background: #F1F5F8;
 }
+
+@tailwind utilities;
+
+
+
