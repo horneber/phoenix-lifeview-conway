@@ -2,12 +2,10 @@
 
    <div class="row">
      <div class="column">
-        <svg viewbox="0 0 <%=@grid_size %> <%=@grid_size %>">
-            <rect width="<%=@grid_size %>" height="<%=@grid_size %>" fill="#F1F5F8"/>
-            <%= for x <- 1..@grid_size, y <- 1..@grid_size do %>
-              <%= if MapSet.member?(@grid, {x,y}) do  %>
-                <rect width="0.9" height="0.9" x="<%= x %>" y="<%= y %>" phx-click="toggle" phx-value="<%= x %>,<%= y %>" />
-             <% end %>
+        <svg viewbox="<%=@x_origin %> <%=@y_origin %> <%=  @grid_size  %> <%= @grid_size  %>">
+            <rect width="<%=@grid_size %>" height="<%=@grid_size %>" x="<%=@x_origin %>" y="<%=@y_origin %>" fill="#F1F5F8"/>
+            <%= for {x, y} <- @grid do %>
+                <rect width="0.9" height="0.9" x="<%= x %>" y="<%= y %>" />
             <% end %>
         </svg>
      </div>
@@ -24,15 +22,15 @@
              </div>
          </div>
          <div class="stats" id="controls">
-                      <%= form_tag("#", phx_change: :save)%>
+              <%= form_tag("#", phx_change: :save)%>
 
-                          <%= label :controls, :grid_size, "Zoom" %>
-                          <%= range_input :controls, :grid_size, value: @grid_size, min: 4, max: 400, class: "reversed_range" %>
+                  <%= label :controls, :grid_size, "Zoom" %>
+                  <%= range_input :controls, :grid_size, value: @grid_size, min: 4, max: 400, class: "reversed_range" %>
 
-                          <%= label :controls, :timer_interval, "Speed" %>
-                          <%= range_input :controls, :timer_interval, value: @timer_interval, min: 100, max: 1500, class: "reversed_range" %>
-                      </form>
-                  </div>
+                  <%= label :controls, :timer_interval, "Speed" %>
+                  <%= range_input :controls, :timer_interval, value: @timer_interval, min: 100, max: 1500, class: "reversed_range" %>
+              </form>
+          </div>
      </div>
     </div>
     <div class="row">

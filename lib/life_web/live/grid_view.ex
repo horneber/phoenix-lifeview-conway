@@ -24,7 +24,9 @@ defmodule LifeWeb.GridView do
         grid_size: @default_grid_size,
         timer_interval: @default_timer_interval,
         edit?: false,
-        largest_population_ever: MapSet.size(grid)
+        largest_population_ever: MapSet.size(grid),
+        x_origin: 0,
+        y_origin: 0
       )
     }
   end
@@ -54,7 +56,7 @@ defmodule LifeWeb.GridView do
 
   def handle_event("save", %{"controls" => controls}, socket) do
     Logger.debug "save #{inspect(controls)}"
-    grid_size = parse_grid_size(controls)
+    {grid_size, x_origin, y_origin} = zoom(controls, socket)
     timer_interval = parse_timer_interval(controls)
     Logger.debug("new timer #{inspect(timer_interval)}}")
     tref = socket.assigns.tref
@@ -62,18 +64,31 @@ defmodule LifeWeb.GridView do
       Logger.debug("On the fly new timer.")
       :timer.cancel(tref)
       tref = new_timer(timer_interval)
-      assign(socket, timer_interval: timer_interval, grid_size: grid_size, tref: tref)
+      assign(socket, timer_interval: timer_interval, grid_size: grid_size, x_origin: x_origin, y_origin: y_origin, tref: tref)
     else
-      assign(socket, timer_interval: timer_interval, grid_size: grid_size)
+      assign(socket, timer_interval: timer_interval, grid_size: grid_size,x_origin: x_origin, y_origin: y_origin)
     end
     {:noreply, socket}
   end
 
+  def zoom(controls, socket) do
+    grid_size = parse_grid_size(controls)
+    {x_origin, y_origin} = new_origins_for_size_change(grid_size, socket)
+    {grid_size, x_origin, y_origin}
+  end
   def parse_grid_size(controls) do
     case Integer.parse(controls["grid_size"]) do
       {grid_size, _} -> grid_size
       :error -> @default_grid_size
     end
+  end
+
+  def new_origins_for_size_change(new_grid_size, socket) do
+    old_grid_size = socket.assigns.grid_size
+    old_x_origin = socket.assigns.x_origin
+    old_y_origin = socket.assigns.y_origin
+    grid_size_diff = div(old_grid_size - new_grid_size, 2)
+    {old_x_origin + grid_size_diff, old_y_origin + grid_size_diff}
   end
 
   @minimum_interval 100
@@ -86,7 +101,7 @@ defmodule LifeWeb.GridView do
 
   def assign_speed_change(socket, timer_interval) do
     tref = socket.assigns.tref
-    socket = if tref do
+    if tref do
       Logger.debug("On the fly new timer.")
       :timer.cancel(tref)
       tref = new_timer(timer_interval)
@@ -122,35 +137,35 @@ defmodule LifeWeb.GridView do
   end
 
   def handle_event("window_key_event", "ArrowUp", socket) do
-    {:noreply, assign(socket, :grid, Life.Grids.transpose(socket.assigns.grid, {0, -1}))}
+    {:noreply, assign(socket, :y_origin, socket.assigns.y_origin + 1)}
   end
 
   def handle_event("window_key_event", "ArrowDown", socket) do
-    {:noreply, assign(socket, :grid, Life.Grids.transpose(socket.assigns.grid, {0, 1}))}
+    {:noreply, assign(socket, :y_origin, socket.assigns.y_origin - 1)}
   end
 
   def handle_event("window_key_event", "ArrowLeft", socket) do
-    {:noreply, assign(socket, :grid, Life.Grids.transpose(socket.assigns.grid, {-1, 0}))}
+    {:noreply, assign(socket, :x_origin, socket.assigns.x_origin + 1)}
   end
 
   def handle_event("window_key_event", "ArrowRight", socket) do
-    {:noreply, assign(socket, :grid, Life.Grids.transpose(socket.assigns.grid, {1, 0}))}
+    {:noreply, assign(socket, :x_origin, socket.assigns.x_origin - 1)}
   end
 
   def handle_event("window_key_event", "w", socket) do
-    {:noreply, assign(socket, :grid, Life.Grids.transpose(socket.assigns.grid, {0, -4}))}
+    {:noreply, assign(socket, :y_origin, socket.assigns.y_origin + 4)}
   end
 
   def handle_event("window_key_event", "s", socket) do
-    {:noreply, assign(socket, :grid, Life.Grids.transpose(socket.assigns.grid, {0, 4}))}
+    {:noreply, assign(socket, :y_origin, socket.assigns.y_origin - 4)}
   end
 
   def handle_event("window_key_event", "a", socket) do
-    {:noreply, assign(socket, :grid, Life.Grids.transpose(socket.assigns.grid, {-4, 0}))}
+    {:noreply, assign(socket, :x_origin, socket.assigns.x_origin + 4)}
   end
 
   def handle_event("window_key_event", "d", socket) do
-    {:noreply, assign(socket, :grid, Life.Grids.transpose(socket.assigns.grid, {4, 0}))}
+    {:noreply, assign(socket, :x_origin, socket.assigns.x_origin - 4)}
   end
 
   def handle_event("window_key_event", any_other_key, socket) do
