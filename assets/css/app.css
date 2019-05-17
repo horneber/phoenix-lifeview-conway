@@ -13,6 +13,10 @@ body {
     background: #F1F5F8;
 }
 
+td:hover {
+    background: #b3b6b8;
+}
+
 footer {
     text-align: center;
     font-size: 0.6rem;
@@ -48,4 +52,8 @@ div#edit_overlay {
 
 .number_value {
     font-family: monospace;
+}
+
+.z-5 {
+    z-index: 5;
 }
