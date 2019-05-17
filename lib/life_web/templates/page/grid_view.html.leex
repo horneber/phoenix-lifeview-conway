@@ -23,16 +23,16 @@
                Largest Population Seen: <span class="number_value"><%= @largest_population_ever %></span>
              </div>
          </div>
-        <div class="stats" id="controls">
-             <%= form_tag("#", phx_change: :save)%>
+         <div class="stats" id="controls">
+                      <%= form_tag("#", phx_change: :save)%>
 
-                 <%= label :controls, :grid_size %>
-                 <%= number_input :controls, :grid_size, value: @grid_size, phx_change: :log %>
+                          <%= label :controls, :grid_size, "Zoom" %>
+                          <%= range_input :controls, :grid_size, value: @grid_size, min: 4, max: 400, class: "reversed_range" %>
 
-                 <%= label :controls, :timer_interval %>
-                 <%= number_input :controls, :timer_interval, value: @timer_interval, min: 100, phx_change: :log %>
-             </form>
-         </div>
+                          <%= label :controls, :timer_interval, "Speed" %>
+                          <%= range_input :controls, :timer_interval, value: @timer_interval, min: 100, max: 1500, class: "reversed_range" %>
+                      </form>
+                  </div>
      </div>
     </div>
     <div class="row">

@@ -57,3 +57,7 @@ div#edit_overlay {
 .z-5 {
     z-index: 5;
 }
+
+.reversed_range {
+    direction: rtl
+}
