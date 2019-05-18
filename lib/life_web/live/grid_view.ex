@@ -71,45 +71,6 @@ defmodule LifeWeb.GridView do
     {:noreply, socket}
   end
 
-  def zoom(controls, socket) do
-    grid_size = parse_grid_size(controls)
-    {x_origin, y_origin} = new_origins_for_size_change(grid_size, socket)
-    {grid_size, x_origin, y_origin}
-  end
-  def parse_grid_size(controls) do
-    case Integer.parse(controls["grid_size"]) do
-      {grid_size, _} -> grid_size
-      :error -> @default_grid_size
-    end
-  end
-
-  def new_origins_for_size_change(new_grid_size, socket) do
-    old_grid_size = socket.assigns.grid_size
-    old_x_origin = socket.assigns.x_origin
-    old_y_origin = socket.assigns.y_origin
-    grid_size_diff = div(old_grid_size - new_grid_size, 2)
-    {old_x_origin + grid_size_diff, old_y_origin + grid_size_diff}
-  end
-
-  @minimum_interval 100
-  def parse_timer_interval(controls) do
-    case Integer.parse(controls["timer_interval"]) do
-      {timer_interval, _} -> max(timer_interval, @minimum_interval)
-      :error -> @default_timer_interval
-    end
-  end
-
-  def assign_speed_change(socket, timer_interval) do
-    tref = socket.assigns.tref
-    if tref do
-      Logger.debug("On the fly new timer.")
-      :timer.cancel(tref)
-      tref = new_timer(timer_interval)
-      assign(socket, timer_interval: timer_interval, tref: tref)
-    else
-      assign(socket, timer_interval: timer_interval)
-    end
-  end
 
   def handle_event("stop_auto", _value, socket) do
     if socket.assigns.tref do
@@ -126,6 +87,19 @@ defmodule LifeWeb.GridView do
   def handle_event("log", %{"controls" => controls}, socket) do
     Logger.debug inspect(controls)
     {:noreply, socket}
+  end
+
+  def handle_event("←", _value, socket) do
+    {:noreply, assign(socket, :x_origin, socket.assigns.x_origin + 1)}
+  end
+  def handle_event("→", _value, socket) do
+    {:noreply, assign(socket, :x_origin, socket.assigns.x_origin - 1)}
+  end
+  def handle_event("↑", _value, socket) do
+    {:noreply, assign(socket, :y_origin, socket.assigns.y_origin + 1)}
+  end
+  def handle_event("↓", _value, socket) do
+    {:noreply, assign(socket, :y_origin, socket.assigns.y_origin - 1)}
   end
 
   def handle_event("window_key_event", " ", socket) do
@@ -199,5 +173,46 @@ defmodule LifeWeb.GridView do
     Logger.debug "stop_auto"
     :timer.cancel(tref)
     {:noreply, assign(socket, tref: nil)}
+  end
+
+
+  def zoom(controls, socket) do
+    grid_size = parse_grid_size(controls)
+    {x_origin, y_origin} = new_origins_for_size_change(grid_size, socket)
+    {grid_size, x_origin, y_origin}
+  end
+  def parse_grid_size(controls) do
+    case Integer.parse(controls["grid_size"]) do
+      {grid_size, _} -> grid_size
+      :error -> @default_grid_size
+    end
+  end
+
+  def new_origins_for_size_change(new_grid_size, socket) do
+    old_grid_size = socket.assigns.grid_size
+    old_x_origin = socket.assigns.x_origin
+    old_y_origin = socket.assigns.y_origin
+    grid_size_diff = div(old_grid_size - new_grid_size, 2)
+    {old_x_origin + grid_size_diff, old_y_origin + grid_size_diff}
+  end
+
+  @minimum_interval 100
+  def parse_timer_interval(controls) do
+    case Integer.parse(controls["timer_interval"]) do
+      {timer_interval, _} -> max(timer_interval, @minimum_interval)
+      :error -> @default_timer_interval
+    end
+  end
+
+  def assign_speed_change(socket, timer_interval) do
+    tref = socket.assigns.tref
+    if tref do
+      Logger.debug("On the fly new timer.")
+      :timer.cancel(tref)
+      tref = new_timer(timer_interval)
+      assign(socket, timer_interval: timer_interval, tref: tref)
+    else
+      assign(socket, timer_interval: timer_interval)
+    end
   end
 end

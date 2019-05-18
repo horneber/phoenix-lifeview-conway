@@ -21,27 +21,50 @@
                Largest Population Seen: <span class="number_value"><%= @largest_population_ever %></span>
              </div>
          </div>
-         <div class="stats" id="controls">
-              <%= form_tag("#", phx_change: :save)%>
+         <div class="row stats" >
+             <div class="column" >
 
-                  <%= label :controls, :grid_size, "Zoom" %>
-                  <%= range_input :controls, :grid_size, value: @grid_size, min: 4, max: 400, class: "reversed_range" %>
+               <div class="row">
+                 <div class="column column-40"></div>
+                 <div class="column column-20"><button phx-click="↑">↑</button></div>
+                 <div class="column column-40"></div>
+               </div>
 
-                  <%= label :controls, :timer_interval, "Speed" %>
-                  <%= range_input :controls, :timer_interval, value: @timer_interval, min: 100, max: 1500, class: "reversed_range" %>
-              </form>
+               <div class="row">
+                 <div class="column column-30"></div>
+                 <div class="column column-20"><button phx-click="←">←</button></div>
+                 <div class="column column-20"><button phx-click="→">→</button></div>
+                 <div class="column column-30"></div>
+               </div>
+
+               <div class="row">
+                  <div class="column column-40"></div>
+                  <div class="column column-20"><button phx-click="↓">↓</button></div>
+                  <div class="column column-40"></div>
+               </div>
+             </div>
+            <div class="column" >
+                  <%= form_tag("#", phx_change: :save)%>
+
+                      <%= label :controls, :grid_size, "Zoom" %>
+                      <%= range_input :controls, :grid_size, value: @grid_size, min: 4, max: 400, class: "reversed_range" %>
+
+                      <%= label :controls, :timer_interval, "Speed" %>
+                      <%= range_input :controls, :timer_interval, value: @timer_interval, min: 100, max: 1500, class: "reversed_range" %>
+                  </form>
+             </div>
           </div>
-     </div>
+      </div>
     </div>
     <div class="row">
        <nav>
-                  <%= if @tref  do %>
-                     <button phx-click="stop_auto">Stop</button>
-                   <% else %>
-                     <button phx-click="start_auto">Start</button>
-                     <button phx-click="next_gen">Next Generation</button>
-                     <button phx-click="start_editing">Edit</button>
-                   <% end %>
+          <%= if @tref  do %>
+             <button phx-click="stop_auto">Stop</button>
+           <% else %>
+             <button phx-click="start_auto">Start</button>
+             <button phx-click="next_gen">Next Generation</button>
+             <button phx-click="start_editing">Edit</button>
+           <% end %>
        </nav>
     </div>
 
