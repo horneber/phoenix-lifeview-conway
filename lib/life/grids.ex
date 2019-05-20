@@ -77,7 +77,7 @@ defmodule Life.Grids do
     end
   end
 
-  def interesting_starter do
+  def interesting_starter(around) do
     gosper_glider()
     |> transpose({10, 130})
     |> mirror()
@@ -94,6 +94,7 @@ defmodule Life.Grids do
     |> add_cells(Life.Patterns.Spaceships.lightweight_spaceship(), {-40, 85})
     |> add_cells(Life.Patterns.Spaceships.lightweight_spaceship(), {-10, 85})
     |> add_cells(Life.Patterns.StillLife.beehive(), {70, 10})
+    |> transpose({-around, -around})
 
   end
 end

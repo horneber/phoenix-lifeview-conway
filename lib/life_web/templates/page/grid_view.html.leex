@@ -2,10 +2,10 @@
 
    <div class="row">
      <div class="column">
-        <svg viewbox="<%=@x_origin %> <%=@y_origin %> <%=  @grid_size  %> <%= @grid_size  %>">
-            <rect width="<%=@grid_size %>" height="<%=@grid_size %>" x="<%=@x_origin %>" y="<%=@y_origin %>" fill="#F1F5F8"/>
+        <svg viewbox="<%= -1 * @quadrant_size + @x_origin %> <%= -1 * @quadrant_size + @y_origin %> <%= 2 * @quadrant_size  %> <%= 2 * @quadrant_size  %>">
+            <rect x="<%=-1 * @quadrant_size + @x_origin %>" y="<%=-1 * @quadrant_size + @y_origin %>"  width="<%=2 * @quadrant_size %>" height="<%= 2 * @quadrant_size %>" fill="#F1F5F8"/>
             <%= for {x, y} <- @grid do %>
-                <rect width="0.9" height="0.9" x="<%= x %>" y="<%= y %>" />
+                <rect  x="<%= x %>" y="<%= y %>" width="0.9" height="0.9" />
             <% end %>
         </svg>
      </div>
@@ -44,14 +44,16 @@
                </div>
              </div>
             <div class="column" >
-                  <%= form_tag("#", phx_change: :save)%>
+                  <%= form_tag("#", phx_change: :zoom)%>
 
-                      <%= label :controls, :grid_size, "Zoom" %>
-                      <%= range_input :controls, :grid_size, value: @grid_size, min: 4, max: 400, class: "reversed_range" %>
-
+                      <%= label :controls, :quadrant_size, "Zoom" %>
+                      <%= range_input :controls, :quadrant_size, value: @quadrant_size, min: 4, max: 300, class: "reversed_range" %>
+                 </form>
+                  <%= form_tag("#", phx_change: :speed)%>
                       <%= label :controls, :timer_interval, "Speed" %>
                       <%= range_input :controls, :timer_interval, value: @timer_interval, min: 100, max: 1500, class: "reversed_range" %>
-                  </form>
+                 </form>
+
              </div>
           </div>
       </div>
@@ -81,10 +83,17 @@
     <div id="edit_overlay" >
         <div class="container">
             <table >
-              <%= for y <- 1..@grid_size do %>
+              <%=
+              y_from = -1 * @quadrant_size + @y_origin
+              height = 2 * @quadrant_size
+              y_to = y_from + height
+              for y <- y_from..y_to do %>
                 <tr>
-                  <%= for x <- 1..@grid_size do %>
-                    <td class="<%= if MapSet.member?(@grid, {x,y}), do: "alive", else: "dead" %>" phx-click="toggle" phx-value="<%= x %>,<%= y %>"></td>
+                  <%=
+                    x_from = -1 * @quadrant_size + @x_origin
+                    x_to = x_from + height
+                    for x <- x_from..x_to do %>
+                    <td class="<%= if MapSet.member?(@grid, {x , y}), do: "alive", else: "dead" %>" phx-click="toggle" phx-value="<%= x %>,<%= y %>"></td>
                   <% end %>
                 </tr>
               <% end %>
